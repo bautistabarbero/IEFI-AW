@@ -1,0 +1,14 @@
+{
+  "name": "chiavetta-detailing-web",
+  "version": "1.0.0",
+  "description": "Sitio web de Chiavetta Detailing - IEFI Aplicaciones Web 1 (IES Siglo 21)",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "start": "python3 -m http.server 8000"
+  },
+  "license": "UNLICENSED"
+}
