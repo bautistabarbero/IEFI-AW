@@ -7,17 +7,24 @@ const ETIQUETAS_CATEGORIA = {
     herramientas: 'Herramientas y accesorios',
 };
 
-let productosCargados = null;
+let cache = null;
 
-/** Lee el catálogo del JSON con fetch() (una sola vez por página). Lanza un error si falla. */
-export async function obtenerProductos(ruta = CONFIG.rutaProductos) {
-    if (productosCargados) return productosCargados;
-    const respuesta = await fetch(ruta);
-    if (!respuesta.ok) throw new Error(`No se pudo cargar ${ruta} (HTTP ${respuesta.status})`);
-    const datos = await respuesta.json();
-    if (!Array.isArray(datos)) throw new Error('El catálogo no tiene el formato esperado.');
-    productosCargados = datos;
-    return datos;
+/** Descarga el catálogo (una sola vez por página). Lanza error si la red o el JSON fallan. */
+export function obtenerProductos(ruta = CONFIG.rutaProductos) {
+    cache ??= fetch(ruta)
+        .then((respuesta) => {
+            if (!respuesta.ok) throw new Error(`No se pudo cargar ${ruta} (HTTP ${respuesta.status})`);
+            return respuesta.json();
+        })
+        .then((datos) => {
+            if (!Array.isArray(datos)) throw new Error('El catálogo no tiene el formato esperado.');
+            return datos;
+        })
+        .catch((error) => {
+            cache = null; // permite reintentar
+            throw error;
+        });
+    return cache;
 }
 
 /** Enlace a la ficha de un producto. */

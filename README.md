@@ -83,5 +83,5 @@ Los emails se envían con [FormSubmit](https://formsubmit.co), sin servidor prop
 - **Sin frameworks ni dependencias**: HTML, CSS y JavaScript nativos, como pide la materia.
 - **Lógica pura separada del DOM** (`carrito.js`, `productos.js`, `envio.js`, `validaciones.js`): por eso se puede testear con Node sin navegador.
 - **`textContent` en lugar de `innerHTML`** para datos dinámicos (evita inyección de código).
-- **Un solo punto de entrada** (`main.js`): importa la función `iniciar` de cada página y las llama; cada una revisa si sus elementos existen y, si no, no hace nada (misma idea que el `DOMContentLoaded` del TP4).
+- **Carga por página** con `import()` dinámico: cada página descarga solo lo que usa.
 - Los precios del catálogo se consideran finales; se eliminó el "impuesto de ejemplo" del TP4 porque el pedido ahora se envía de verdad al negocio.

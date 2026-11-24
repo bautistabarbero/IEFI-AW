@@ -1,0 +1,58 @@
+name: CI/CD
+
+# CI: en cada push y pull request se ejecutan los tests unitarios nativos de Node.
+# CD: solo si los tests pasan y el push es a main, se publica el sitio en GitHub Pages.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Tests unitarios (node:test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Versión de Node
+        run: node --version
+      - name: Ejecutar tests
+        run: npm test
+
+  deploy:
+    name: Desplegar a producción (GitHub Pages)
+    needs: test # si los tests fallan, este job nunca se ejecuta
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar carpeta publicable (solo el sitio, sin tests ni configuración)
+        run: |
+          mkdir _site
+          cp *.html _site/
+          cp -r recursos _site/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
