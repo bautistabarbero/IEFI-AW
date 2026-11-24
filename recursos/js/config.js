@@ -7,7 +7,7 @@ export const CONFIG = Object.freeze({
         whatsapp: '5493513090597',
     }),
     // Dirección que recibe los pedidos y consultas por email (servicio FormSubmit, sin backend propio).
-    emailDestino: 'santinoch92@gmail.com',
+    emailDestino: 'bautibarbero97@gmail.com',
     rutaProductos: 'recursos/datos/productos.json',
     limiteUnidades: 99,
     promocion: Object.freeze({ codigo: 'CHIAVETTA10', porcentaje: 10 }),
